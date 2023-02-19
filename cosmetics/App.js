@@ -1,29 +1,37 @@
 import { useState } from 'react';
-import { StyleSheet, Text, View, TextInput } from 'react-native';
+import { StyleSheet, Text, View, FlatList, TouchableOpacity } from 'react-native';
 
 export default function App() {
-  const [name, setName] = useState("shaun")
-  const [age, setAge] = useState("30")
+  const [name, setName] = useState([
+    { name: "lipa", id: '1' },
+    { name: "czesc", id: '2' },
+    { name: "sukad", id: '3' },
+    { name: "swolocz", id: '4' },
+    { name: "swolocz", id: '5' },
+    { name: "swolocz", id: '6' },
+    { name: "swolocz", id: '7' },
+  ]);
+
+  function pressHandler(id) {
+    console.log(id)
+    setName((prevName) => {
+      return prevName.filter(name => name.id != id)
+    })
+  }
 
   return (
     <View style={styles.container}>
-      <Text>Enter Name</Text>
-      <TextInput
-      multiline 
-      style={styles.input}
-      placeholder="e.g John"
-      onChangeText={(val) => setName(val)}
-      />
-      
-       <Text>Enter Age</Text>
-      <TextInput 
-      style={styles.input}
-      keyboardType="numeric"
-      placeholder="e.g 90"
-      onChangeText={(val) => setAge(val)}
-      />
+      <FlatList
+        numColumns={2}
+        keyExtractor={(item) => item.id}
+        data={name}
+        renderItem={({ item }) => (
+          <TouchableOpacity onPress={() => pressHandler(item.id)}>
+            <Text style={styles.item}>{item.name}</Text>
+          </TouchableOpacity>
 
-      <Text>name:{name} age:{age}</Text>
+        )}
+      />
     </View>
   );
 }
@@ -32,25 +40,15 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    paddingTop: 40,
+    paddingHorizontal: 20,
   },
-  header: {
-    backgroundColor: "pink",
-    padding: 20,
-  },
-  boldText: {
-    fontWeight: 'bold'
-  },
-  body: {
-    backgroundColor: 'yellow',
-    padding: 20
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: "#777",
-    padding: 8,
-    margin: 10,
-    width: 200,
+  item: {
+    marginTop: 20,
+    padding: 30,
+    backgroundColor: "purple",
+    fontSize: 20,
+    marginHorizontal: 10,
+    marginTop: 24,
   }
 });
