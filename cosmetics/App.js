@@ -1,37 +1,47 @@
 import { useState } from 'react';
-import { StyleSheet, Text, View, FlatList, TouchableOpacity } from 'react-native';
+import { FlatList, StyleSheet, Text, View, } from 'react-native';
+import Addtodo from './components/Addtodo';
+import Header from './components/header';
+import TodoItem from './components/todoItem';
 
 export default function App() {
-  const [name, setName] = useState([
-    { name: "lipa", id: '1' },
-    { name: "czesc", id: '2' },
-    { name: "sukad", id: '3' },
-    { name: "swolocz", id: '4' },
-    { name: "swolocz", id: '5' },
-    { name: "swolocz", id: '6' },
-    { name: "swolocz", id: '7' },
+  const [todos, setTodos] = useState([
+    { text: "kup chleb", id: '1' },
+    { text: "kup bydla", id: '2' },
+    { text: "kup worek", id: '3' },
   ]);
 
   function pressHandler(id) {
-    console.log(id)
-    setName((prevName) => {
-      return prevName.filter(name => name.id != id)
+    setTodos((prevTodos) => {
+      return prevTodos.filter(todo => todo.id != id);
+    })
+  }
+
+  function submitHandler(text) {
+    setTodos((prevTodos) => {
+      return [
+        {text: text, id: Math.random().toString() },
+        ...prevTodos
+      ]
     })
   }
 
   return (
     <View style={styles.container}>
-      <FlatList
-        numColumns={2}
-        keyExtractor={(item) => item.id}
-        data={name}
-        renderItem={({ item }) => (
-          <TouchableOpacity onPress={() => pressHandler(item.id)}>
-            <Text style={styles.item}>{item.name}</Text>
-          </TouchableOpacity>
+      <Header />
+      <View style={styles.content}>
+        <Addtodo submitHandler={submitHandler}/>
+        <View style={styles.list}>
+          <FlatList
+            keyExtractor={item => item.id}
+            data={todos}
+            renderItem={({ item }) => (
+              <TodoItem item={item} pressHandler={pressHandler}  />
+            )}
 
-        )}
-      />
+          />
+        </View>
+      </View>
     </View>
   );
 }
@@ -40,15 +50,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    paddingTop: 40,
-    paddingHorizontal: 20,
   },
-  item: {
+  content: {
+    padding: 40,
+  },
+  list: {
     marginTop: 20,
-    padding: 30,
-    backgroundColor: "purple",
-    fontSize: 20,
-    marginHorizontal: 10,
-    marginTop: 24,
   }
 });
